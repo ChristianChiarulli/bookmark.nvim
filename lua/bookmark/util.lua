@@ -1,6 +1,5 @@
 local M = {}
 
--- Place the sign
 function M.add_sign(line, sign_name)
 	return vim.fn.sign_place(0, "Bookmarks", sign_name, vim.api.nvim_buf_get_name(0), { lnum = line })
 end
@@ -23,7 +22,6 @@ function M.next_largest(num, list)
 	return next_largest_num
 end
 
--- write function for next smallest
 function M.next_smallest(num, list)
 	local next_smallest_num = nil
 	for _, v in ipairs(list) do
