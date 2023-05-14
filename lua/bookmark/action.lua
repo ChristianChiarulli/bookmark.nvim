@@ -6,10 +6,8 @@ local M = {}
 local bookmarks = {}
 local sign_lookup = {}
 
--- Define a sign
 vim.fn.sign_define("BookmarkSign", { text = config.options.sign, texthl = config.options.highlight })
 
--- Toggle Bookmark
 function M.toggle()
 	local current_file = vim.api.nvim_buf_get_name(0)
 	local current_line = util.get_current_line()
@@ -22,24 +20,18 @@ function M.toggle()
 		sign_lookup[current_file] = {}
 	end
 
-	-- check if the line is already bookmarked
 	for i, line in ipairs(bookmarks[current_file]) do
 		if line == current_line then
-			-- remove the sign
-			-- vim.fn.sign_unplace("BookmarkSign", { buffer = "%", 3 })
 			vim.fn.sign_unplace("Bookmarks", {
 				buffer = vim.api.nvim_buf_get_name(0),
 				id = sign_lookup[current_file][current_line],
 				name = "BookmarkSign",
 			})
-			-- remove the line from the bookmarks
 			table.remove(bookmarks[current_file], i)
-			-- print("Bookmark removed for file " .. current_file .. " at line " .. current_line)
 			return
 		end
 	end
 
-	-- insert the line into the bookmarks
 	local sign_id = util.add_sign(current_line, "BookmarkSign")
 
 	if not sign_lookup[current_file][current_line] then
@@ -49,8 +41,6 @@ function M.toggle()
 	sign_lookup[current_file][current_line] = sign_id
 	table.insert(bookmarks[current_file], current_line)
 	table.sort(bookmarks[current_file])
-
-	-- print("Bookmark set for file " .. current_file .. " at line " .. current_line)
 end
 
 function M.next()
