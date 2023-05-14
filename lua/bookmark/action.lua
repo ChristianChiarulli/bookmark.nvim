@@ -50,7 +50,7 @@ function M.toggle()
 	table.insert(bookmarks[current_file], current_line)
 	table.sort(bookmarks[current_file])
 
-	print("Bookmark set for file " .. current_file .. " at line " .. current_line)
+	-- print("Bookmark set for file " .. current_file .. " at line " .. current_line)
 end
 
 function M.next()
