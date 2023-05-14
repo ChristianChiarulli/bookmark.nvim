@@ -7,6 +7,16 @@ Bookmark and jump between lines in the current file
 "ChristianChiarulli/bookmark.nvim"
 ```
 
+## Setup
+
+```
+require("bookmark").setup {
+  sign = "",
+  highlight = "Function",
+}
+
+```
+
 ## Commands
 
 ```
