@@ -1,5 +1,6 @@
 local util = require("bookmark.util")
 local config = require("bookmark.config")
+local db = require("bookmark.datastore")
 
 local M = {}
 
@@ -28,6 +29,7 @@ function M.toggle()
 				name = "BookmarkSign",
 			})
 			table.remove(bookmarks[current_file], i)
+			db.toggle_bookmark(current_line)
 			return
 		end
 	end
@@ -40,6 +42,8 @@ function M.toggle()
 
 	sign_lookup[current_file][current_line] = sign_id
 	table.insert(bookmarks[current_file], current_line)
+	print("current_line: " .. current_line)
+	db.toggle_bookmark(current_line)
 	table.sort(bookmarks[current_file])
 end
 
