@@ -1,5 +1,4 @@
 local db = require("bookmark.datastore")
-local util = require("bookmark.util")
 
 local bookmarks = db.bookmarks
 
@@ -7,12 +6,14 @@ local bookmarks = db.bookmarks
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 	pattern = "*",
 	callback = function()
-		-- list all signs
-
-		-- get line number of each sign
-
-		-- update bookmark with new line number
-		print("bookmarks saved")
+		local bufnr = vim.api.nvim_get_current_buf()
+		local group = "Bookmarks"
+		local signs = vim.fn.sign_getplaced(bufnr, { group = group })
+		local lnums = {}
+		for _, sign in ipairs(signs[1].signs) do
+			table.insert(lnums, sign.lnum)
+			bookmarks.update(sign.id, sign.lnum)
+		end
 	end,
 })
 

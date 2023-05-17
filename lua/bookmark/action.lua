@@ -1,4 +1,5 @@
 local db = require("bookmark.datastore")
+local util = require("bookmark.util")
 
 local bookmarks = db.bookmarks
 
@@ -6,22 +7,75 @@ local M = {}
 
 function M.toggle()
 	local bookmark = bookmarks.get()
-	-- print(vim.inspect(bookmark))
-
 	if bookmark == nil then
-		-- print("creating bookmark")
 		bookmarks.create()
 	else
 		bookmarks.delete()
 	end
 end
 
-function M.next_buf()
-	print("stub")
+function M.next()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local group = "Bookmarks"
+	local signs = vim.fn.sign_getplaced(bufnr, { group = group })
+	local lnums = {}
+	for _, sign in ipairs(signs[1].signs) do
+		table.insert(lnums, sign.lnum)
+	end
+
+	if #lnums == 0 then
+		print("No bookmarks")
+		return
+	end
+
+	if #lnums > 0 then
+		-- TODO: make sure these are sorted before we get here
+		table.sort(lnums)
+		if #lnums > 0 then
+			local next_line = util.next_largest(util.get_current_line(), lnums)
+			if next_line == nil then
+				next_line = lnums[1]
+			end
+			vim.api.nvim_win_set_cursor(0, { next_line, 0 })
+			vim.api.nvim_command("normal! zz")
+		else
+			print("No bookmarks")
+		end
+	else
+		print("No bookmarks")
+	end
 end
 
-function M.previous_buf()
-	print("stub")
+function M.previous()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local group = "Bookmarks"
+	local signs = vim.fn.sign_getplaced(bufnr, { group = group })
+	local lnums = {}
+	for _, sign in ipairs(signs[1].signs) do
+		table.insert(lnums, sign.lnum)
+	end
+
+	if #lnums == 0 then
+		print("No bookmarks")
+		return
+	end
+
+	if #lnums > 0 then
+		-- TODO: make sure these are sorted before we get here
+		table.sort(lnums)
+		if #lnums > 0 then
+			local next_line = util.next_smallest(util.get_current_line(), lnums)
+			if next_line == nil then
+				next_line = lnums[#lnums]
+			end
+			vim.api.nvim_win_set_cursor(0, { next_line, 0 })
+			vim.api.nvim_command("normal! zz")
+		else
+			print("No bookmarks")
+		end
+	else
+		print("No bookmarks")
+	end
 end
 
 function M.next_prj()

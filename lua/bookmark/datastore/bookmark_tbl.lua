@@ -9,7 +9,7 @@ local files = require("bookmark.datastore.file_tbl")
 M.bookmarks = tbl("bookmarks", {
 	id = true,
 	lnum = { "number", required = true },
-	sign_id = { "number", unique = true, required = true },
+	sign_id = { "number", unique = false, required = true },
 	sign = { "text", required = true },
 	files = {
 		type = "text",
@@ -25,7 +25,6 @@ M.get = function(bufnr, lnum)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	lnum = lnum or util.get_current_line()
 	local signs = vim.fn.sign_getplaced(bufnr, { group = "Bookmarks", lnum = lnum })
-	-- print(vim.inspect(signs))
 	local bookmark = nil
 	for _, sign in ipairs(signs[1].signs) do
 		if sign.lnum == lnum then
@@ -33,12 +32,10 @@ M.get = function(bufnr, lnum)
 		end
 	end
 
-	-- -- TODO: get sign_id from sign
-	-- print("bookmark: ", vim.inspect(bookmark))
 	if bookmark == nil then
-		-- print("bookmark is nil")
 		return nil
 	end
+
 	return bookmark.sign_id
 end
 
@@ -69,14 +66,19 @@ M.create = function()
 	local filepath = vim.fn.expand("%:p")
 	local file = string.gsub(filepath, project_path, "")
 	local current_line = util.get_current_line()
-	local sign_id = util.add_sign(current_line, "BookmarkSign")
+	-- local id = generateSignId(file, current_line)
+	local sign_id = util.add_sign(0, current_line, "BookmarkSign")
 	-- print("sign_id: ", sign_id)
 	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = "", files = file })
+	-- print("bookmark.sign_id: ", sign_id)
 end
 
 -- update bookmark
-M.update = function()
-	print("stub")
+M.update = function(sign_id, lnum)
+	M.bookmarks:update({
+		where = { sign_id = sign_id },
+		set = { lnum = lnum },
+	})
 end
 
 -- delete bookmark
@@ -84,10 +86,14 @@ M.delete = function(bufnr, lnum)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	lnum = lnum or util.get_current_line()
 	local signs = vim.fn.sign_getplaced(bufnr, { group = "Bookmarks", lnum = lnum })
+
+	local project_path = vim.fn.getcwd()
+	local filepath = vim.fn.expand("%:p")
+	local relative_file_path = string.gsub(filepath, project_path, "")
+
 	for _, sign in ipairs(signs[1].signs) do
 		if sign.lnum == lnum then
-			-- print("Deleting sign " .. sign.name .. " on line " .. lnum)
-			M.bookmarks:remove({ where = { sign_id = sign.id } })
+			M.bookmarks:remove({ where = { sign_id = sign.id, files = relative_file_path } })
 			vim.fn.sign_unplace("Bookmarks", {
 				buffer = vim.api.nvim_buf_get_name(0),
 				id = sign.id,

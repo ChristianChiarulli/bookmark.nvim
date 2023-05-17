@@ -1,7 +1,7 @@
 local M = {}
 
-function M.add_sign(line, sign_name)
-	return vim.fn.sign_place(0, "Bookmarks", sign_name, vim.api.nvim_buf_get_name(0), { lnum = line })
+function M.add_sign(id, line, sign_name)
+	return vim.fn.sign_place(id, "Bookmarks", sign_name, vim.api.nvim_buf_get_name(0), { lnum = line })
 end
 
 function M.get_current_line()
