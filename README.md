@@ -5,6 +5,7 @@ Bookmark and jump between lines in the current file
 
 ```
 "ChristianChiarulli/bookmark.nvim"
+"kkharji/sqlite.lua"
 ```
 
 ## Setup
@@ -20,14 +21,10 @@ require("bookmark").setup {
 
 ```
 BookmarkToggle
-BookmarkNext
-BookmarkPrev
 ```
 
 ## TODO
 
-- save to file
-- load all bookmarks on start
 - clear all bookmarks
 - clear all bookmarks current buffer
 - save line data as well

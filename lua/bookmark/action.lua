@@ -1,101 +1,83 @@
-local util = require("bookmark.util")
-local config = require("bookmark.config")
+local db = require("bookmark.datastore")
+
+local bookmarks = db.bookmarks
 
 local M = {}
 
-local bookmarks = {}
-local sign_lookup = {}
-
-vim.fn.sign_define("BookmarkSign", { text = config.options.sign, texthl = config.options.highlight })
-
 function M.toggle()
-	local current_file = vim.api.nvim_buf_get_name(0)
-	local current_line = util.get_current_line()
+	local bookmark = bookmarks.get()
+	-- print(vim.inspect(bookmark))
 
-	if not bookmarks[current_file] then
-		bookmarks[current_file] = {}
-	end
-
-	if not sign_lookup[current_file] then
-		sign_lookup[current_file] = {}
-	end
-
-	for i, line in ipairs(bookmarks[current_file]) do
-		if line == current_line then
-			vim.fn.sign_unplace("Bookmarks", {
-				buffer = vim.api.nvim_buf_get_name(0),
-				id = sign_lookup[current_file][current_line],
-				name = "BookmarkSign",
-			})
-			table.remove(bookmarks[current_file], i)
-			return
-		end
-	end
-
-	local sign_id = util.add_sign(current_line, "BookmarkSign")
-
-	if not sign_lookup[current_file][current_line] then
-		sign_lookup[current_file][current_line] = {}
-	end
-
-	sign_lookup[current_file][current_line] = sign_id
-	table.insert(bookmarks[current_file], current_line)
-	table.sort(bookmarks[current_file])
-end
-
-function M.next()
-	local current_file = vim.api.nvim_buf_get_name(0)
-
-	if bookmarks[current_file] == nil then
-		print("No bookmarks")
-		return
-	end
-
-	if current_file and #bookmarks[current_file] > 0 then
-		local next_line = util.next_largest(util.get_current_line(), bookmarks[current_file])
-		if next_line == nil then
-			next_line = bookmarks[current_file][1]
-		end
-		vim.api.nvim_win_set_cursor(0, { next_line, 0 })
-		vim.api.nvim_command("normal! zz")
+	if bookmark == nil then
+		-- print("creating bookmark")
+		bookmarks.create()
 	else
-		print("No bookmarks")
+		bookmarks.delete()
 	end
 end
 
-function M.previous()
-	local current_file = vim.api.nvim_buf_get_name(0)
+function M.next_buf()
+	print("stub")
+end
 
-	if bookmarks[current_file] == nil then
-		print("No bookmarks")
-		return
-	end
+function M.previous_buf()
+	print("stub")
+end
 
-	if current_file and #bookmarks[current_file] > 0 then
-		local next_line = util.next_smallest(util.get_current_line(), bookmarks[current_file])
-		if next_line == nil then
-			next_line = bookmarks[current_file][#bookmarks[current_file]]
-		end
-		vim.api.nvim_win_set_cursor(0, { next_line, 0 })
-		vim.api.nvim_command("normal! zz")
-	else
-		print("No bookmarks")
-	end
+function M.next_prj()
+	print("stub")
+end
+
+function M.previous_prj()
+	print("stub")
 end
 
 function M.list()
-	local current_file = vim.api.nvim_buf_get_name(0)
-	if bookmarks[current_file] == nil then
-		print("No bookmarks")
-		return
+	print("stub")
+end
+
+function M.clear_buffer()
+	print("stub")
+end
+
+function M.clear_project()
+	print("stub")
+end
+
+function M.annotate()
+	print("stub")
+end
+
+function M.change_icon()
+	print("stub")
+end
+
+function M.mark_file()
+	print("stub")
+end
+
+function M.mark_search()
+	-- usecase search for function mark lines, search is free can move between functions
+	local search_term = vim.fn.getreg("/")
+	local line_numbers = {}
+	local line_number = vim.fn.search(search_term, "cn")
+
+	while line_number ~= 0 do
+		table.insert(line_numbers, line_number)
+		line_number = vim.fn.search(search_term, "cn")
 	end
-	if current_file and #bookmarks[current_file] > 0 then
-		for _, line in ipairs(bookmarks[current_file]) do
-			print(line)
-		end
-	else
-		print("No bookmarks")
+
+	for _, line in ipairs(line_numbers) do
+		print(line)
 	end
+end
+
+function M.export_buf_annotations()
+	print("stub")
+end
+
+function M.export_prj_annotations()
+	print("stub")
 end
 
 return M
