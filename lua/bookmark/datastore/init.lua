@@ -1,7 +1,7 @@
 local M = {}
 
 local sqlite = require("sqlite")
-local uri = os.getenv("HOME") .. "/test_db"
+local uri = vim.fn.stdpath('data') .. "/bookmark_db"
 
 M.projects = require("bookmark.datastore.project_tbl")
 M.files = require("bookmark.datastore.file_tbl")
