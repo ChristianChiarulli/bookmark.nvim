@@ -74,9 +74,9 @@ M.create = function()
 end
 
 -- update bookmark
-M.update = function(sign_id, lnum)
+M.update = function(sign_id, lnum, file_path)
 	M.bookmarks:update({
-		where = { sign_id = sign_id },
+		where = { sign_id = sign_id, files = file_path },
 		set = { lnum = lnum },
 	})
 end

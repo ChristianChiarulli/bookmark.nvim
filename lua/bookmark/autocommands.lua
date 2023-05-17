@@ -10,9 +10,12 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 		local group = "Bookmarks"
 		local signs = vim.fn.sign_getplaced(bufnr, { group = group })
 		local lnums = {}
+		local project_path = vim.fn.getcwd()
+		local filepath = vim.fn.expand("%:p")
+		local relative_file_path = string.gsub(filepath, project_path, "")
 		for _, sign in ipairs(signs[1].signs) do
 			table.insert(lnums, sign.lnum)
-			bookmarks.update(sign.id, sign.lnum)
+			bookmarks.update(sign.id, sign.lnum, relative_file_path)
 		end
 	end,
 })
