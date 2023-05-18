@@ -23,4 +23,5 @@ vim.cmd([[
   command! BookmarkNext lua require'bookmark.action'.next()
   command! BookmarkPrev lua require'bookmark.action'.previous()
   command! BookmarkList lua require'bookmark.action'.list_buffer_qf()
+  command! BookmarkClear lua require'bookmark.action'.clear_buffer()
 ]])

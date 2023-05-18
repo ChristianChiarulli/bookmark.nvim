@@ -25,6 +25,7 @@ BookmarkNext
 BookmarkPrev
 BookmarkPrev
 BookmarkList
+BookmarkClear
 ```
 
 ## TODO

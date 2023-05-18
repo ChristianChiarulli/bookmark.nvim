@@ -2,6 +2,7 @@ local db = require("bookmark.datastore")
 local util = require("bookmark.util")
 
 local bookmarks = db.bookmarks
+local files = db.files
 
 local M = {}
 
@@ -91,7 +92,7 @@ end
 
 function M.list_buffer_qf()
 	-- local bufnr = vim.api.nvim_get_current_buf()
-  -- TODO: also handle project wide bookmarks
+	-- TODO: also handle project wide bookmarks
 	local bookmark_list = bookmarks.get_all_file()
 	local qf_list = {}
 	local path = vim.fn.getcwd()
@@ -110,7 +111,9 @@ function M.list_buffer_qf()
 end
 
 function M.clear_buffer()
-	print("stub")
+	local bufnr = vim.api.nvim_get_current_buf()
+	vim.fn.sign_unplace("Bookmarks", { buffer = bufnr })
+  files.delete()
 end
 
 function M.clear_project()
