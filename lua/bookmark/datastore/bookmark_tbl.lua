@@ -2,6 +2,7 @@ local M = {}
 local util = require("bookmark.util")
 
 local tbl = require("sqlite.tbl") --- for constructing sql tables
+local config = require("bookmark.config")
 
 local projects = require("bookmark.datastore.project_tbl")
 local files = require("bookmark.datastore.file_tbl")
@@ -15,7 +16,7 @@ M.bookmarks = tbl("bookmarks", {
 		type = "text",
 		reference = "files.path",
 		on_delete = "cascade", --- when referenced file is deleted, delete self
-		-- on_update = "cascade", --- when referenced file is deleted, delete self
+		on_update = "cascade", --- when referenced file is deleted, delete self
 		required = true,
 	},
 })
@@ -69,15 +70,18 @@ M.create = function()
 	-- local id = generateSignId(file, current_line)
 	local sign_id = util.add_sign(0, current_line, "BookmarkSign")
 	-- print("sign_id: ", sign_id)
-	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = "", files = file })
+	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file })
 	-- print("bookmark.sign_id: ", sign_id)
 end
 
 -- update bookmark
-M.update = function(sign_id, lnum, file_path)
+M.update = function(sign_text, sign_id, lnum, file_path)
+  print("sign_id: ", sign_id)
+  print("lnum: ", lnum)
+  print("file_path: ", file_path)
 	M.bookmarks:update({
 		where = { sign_id = sign_id, files = file_path },
-		set = { lnum = lnum },
+		set = { lnum = lnum, sign = sign_text, files = file_path },
 	})
 end
 

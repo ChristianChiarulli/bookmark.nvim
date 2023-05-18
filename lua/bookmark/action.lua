@@ -1,8 +1,10 @@
 local db = require("bookmark.datastore")
 local util = require("bookmark.util")
+local config = require("bookmark.config")
 
 local bookmarks = db.bookmarks
 local files = db.files
+local projects = db.projects
 
 local M = {}
 
@@ -113,11 +115,12 @@ end
 function M.clear_buffer()
 	local bufnr = vim.api.nvim_get_current_buf()
 	vim.fn.sign_unplace("Bookmarks", { buffer = bufnr })
-  files.delete()
+	files.delete()
 end
 
 function M.clear_project()
-	print("stub")
+	vim.fn.sign_unplace("Bookmarks")
+	projects.delete()
 end
 
 function M.annotate()
@@ -128,8 +131,15 @@ function M.change_icon()
 	print("stub")
 end
 
-function M.mark_file()
-	print("stub")
+function M.toggle_filemark()
+	local file = files.get()
+	if file == nil then
+		files.mark_file()
+	elseif file.sign == nil or file.sign == "" then
+		files.mark_file()
+	else
+		files.unmark_file()
+	end
 end
 
 function M.mark_search()

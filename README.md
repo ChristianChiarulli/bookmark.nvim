@@ -23,18 +23,23 @@ require("bookmark").setup {
 BookmarkToggle
 BookmarkNext
 BookmarkPrev
-BookmarkPrev
 BookmarkList
 BookmarkClear
+BookmarkClearProject
 ```
 
 ## TODO
 
-- clear all bookmarks
-- clear all bookmarks current buffer
-- save line data as well
-- show in quickfix
+- file mark to jump between different files
+- quickfix list for all file marks
+- quickfix list of all bookmarks in project
 - telescope search through buffer bookmarks
 - telescope search through all bookmarks
-- annotate bookmark
+- telescope search for all filemarks
+- annotate bookmarks
+- associate marks with git hash
+
+- allow user to specify where DB is saved
 - allow jumping between files
+- allow user to select from a list of predefined icons
+- parameter on create for character
