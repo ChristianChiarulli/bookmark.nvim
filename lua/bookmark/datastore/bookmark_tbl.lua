@@ -9,7 +9,7 @@ local files = require("bookmark.datastore.file_tbl")
 
 M.bookmarks = tbl("bookmarks", {
 	id = true,
-	lnum = { "number", required = true },
+	lnum = { "number", required = true, unique = true },
 	sign_id = { "number", unique = false, required = true },
 	sign = { "text", required = true },
 	files = {
@@ -76,9 +76,9 @@ end
 
 -- update bookmark
 M.update = function(sign_text, sign_id, lnum, file_path)
-  print("sign_id: ", sign_id)
-  print("lnum: ", lnum)
-  print("file_path: ", file_path)
+	-- print("sign_id: ", sign_id)
+	-- print("lnum: ", lnum)
+	-- print("file_path: ", file_path)
 	M.bookmarks:update({
 		where = { sign_id = sign_id, files = file_path },
 		set = { lnum = lnum, sign = sign_text, files = file_path },

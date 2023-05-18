@@ -11,7 +11,7 @@ local save_bookmark = function()
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
 	local relative_file_path = string.gsub(filepath, project_path, "")
-	print("relative_file_path: ", relative_file_path)
+	-- print("relative_file_path: ", relative_file_path)
 	for _, sign in ipairs(signs[1].signs) do
 		if sign.name == "BookmarkSign" then
 			table.insert(lnums, sign.lnum)
