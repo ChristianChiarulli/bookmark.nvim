@@ -23,6 +23,8 @@ require("bookmark").setup {
 BookmarkToggle
 BookmarkNext
 BookmarkPrev
+BookmarkPrev
+BookmarkList
 ```
 
 ## TODO
