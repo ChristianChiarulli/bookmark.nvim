@@ -29,7 +29,6 @@ function M.next()
 	end
 
 	if #lnums > 0 then
-		-- TODO: make sure these are sorted before we get here
 		table.sort(lnums)
 		if #lnums > 0 then
 			local next_line = util.next_largest(util.get_current_line(), lnums)
@@ -61,7 +60,6 @@ function M.previous()
 	end
 
 	if #lnums > 0 then
-		-- TODO: make sure these are sorted before we get here
 		table.sort(lnums)
 		if #lnums > 0 then
 			local next_line = util.next_smallest(util.get_current_line(), lnums)
@@ -86,8 +84,29 @@ function M.previous_prj()
 	print("stub")
 end
 
-function M.list()
+function M.list_buffer_ll()
+	-- do it for the loclist as well
 	print("stub")
+end
+
+function M.list_buffer_qf()
+	-- local bufnr = vim.api.nvim_get_current_buf()
+  -- TODO: also handle project wide bookmarks
+	local bookmark_list = bookmarks.get_all_file()
+	local qf_list = {}
+	local path = vim.fn.getcwd()
+
+	for _, item in ipairs(bookmark_list) do
+		-- Open the file in a buffer and get the line text
+		local bufnr = vim.fn.bufadd(path .. item.files)
+		vim.fn.bufload(bufnr)
+		local line_text = vim.api.nvim_buf_get_lines(bufnr, item.lnum - 1, item.lnum, false)[1]
+
+		table.insert(qf_list, { filename = path .. item.files, lnum = item.lnum, text = item.sign .. " " .. line_text })
+	end
+	vim.api.nvim_command("copen")
+
+	vim.fn.setqflist(qf_list)
 end
 
 function M.clear_buffer()
