@@ -82,7 +82,7 @@ M.mark_file = function()
 			projects = project_path,
 			lnum = current_line,
 			sign_id = sign_id,
-			sign = config.options.sign,
+			sign = config.options.file_sign,
 		},
 	})
 end

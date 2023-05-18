@@ -80,7 +80,7 @@ function M.previous()
 end
 
 function M.next_prj()
-	print("stub")
+
 end
 
 function M.previous_prj()
@@ -93,6 +93,7 @@ function M.list_buffer_ll()
 end
 
 function M.list_buffer_qf()
+	vim.fn.setqflist({}, "r")
 	-- local bufnr = vim.api.nvim_get_current_buf()
 	-- TODO: also handle project wide bookmarks
 	local bookmark_list = bookmarks.get_all_file()
@@ -140,6 +141,30 @@ function M.toggle_filemark()
 	else
 		files.unmark_file()
 	end
+end
+
+function M.list_file_marks_qf()
+	vim.fn.setqflist({}, "r")
+	local file_list = files.get_all()
+
+	local qf_list = {}
+
+	for _, item in ipairs(file_list) do
+		-- Open the file in a buffer and get the line text
+		if item.sign ~= nil and item.sign ~= "" then
+			local bufnr = vim.fn.bufadd(item.projects .. item.path)
+			vim.fn.bufload(bufnr)
+			local line_text = vim.api.nvim_buf_get_lines(bufnr, item.lnum - 1, item.lnum, false)[1]
+
+			table.insert(
+				qf_list,
+				{ filename = item.projects .. item.path, lnum = item.lnum, text = item.sign .. " " .. line_text }
+			)
+		end
+	end
+	vim.api.nvim_command("copen")
+
+	vim.fn.setqflist(qf_list)
 end
 
 function M.mark_search()

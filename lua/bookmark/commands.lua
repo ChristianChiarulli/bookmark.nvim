@@ -26,4 +26,5 @@ vim.cmd([[
   command! BookmarkClear lua require'bookmark.action'.clear_buffer()
   command! BookmarkClearProject lua require'bookmark.action'.clear_project()
   command! FilemarkToggle lua require'bookmark.action'.toggle_filemark()
+  command! FilemarkList lua require'bookmark.action'.list_file_marks_qf()
 ]])
