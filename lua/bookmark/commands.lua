@@ -28,5 +28,5 @@ vim.cmd([[
   command! FilemarkToggle lua require'bookmark.action'.toggle_filemark()
   command! FilemarkList lua require'bookmark.action'.list_file_marks_qf()
   command! FilemarkNext lua require'bookmark.action'.next_file()
-  " command! FilemarkPrev lua require'bookmark.action'.list_file_marks_qf()
+  command! FilemarkPrev lua require'bookmark.action'.previous_file()
 ]])
