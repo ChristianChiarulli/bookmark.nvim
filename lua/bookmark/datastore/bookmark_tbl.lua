@@ -73,7 +73,6 @@ M.create = function()
 	-- local id = generateSignId(file, current_line)
 	local sign_id = util.add_sign(0, current_line, "BookmarkSign")
 	-- print("sign_id: ", sign_id)
-	print({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file.id })
 	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file.id })
 	-- print("bookmark.sign_id: ", sign_id)
 end
