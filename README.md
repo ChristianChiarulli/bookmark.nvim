@@ -1,6 +1,8 @@
 # 📚 bookmark.nvim
 Bookmark and jump between lines in the current file
 
+🚧This plugin is in alpha expect bugs please report issues 🚧
+
 ## Install
 
 ```
@@ -46,6 +48,10 @@ Then call it with:
 ```
 :Telescope bookmark filemarks
 ```
+
+## Database
+
+The sqlite db is located at `~/.local/share/nvim/bookmark_db`
 
 ## TODO
 
