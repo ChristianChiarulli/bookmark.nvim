@@ -26,20 +26,30 @@ BookmarkPrev
 BookmarkList
 BookmarkClear
 BookmarkClearProject
+
+FilemarkToggle
+FilemarkNext
+FilemarkPrev
+FilemarkList
 ```
 
 ## TODO
 
-- file mark to jump between different files
-- quickfix list for all file marks
-- quickfix list of all bookmarks in project
 - telescope search through buffer bookmarks
-- telescope search through all bookmarks
 - telescope search for all filemarks
+
+- fix bookmark and filemark on same line
+
 - annotate bookmarks
+
+- quickfix list of all bookmarks in project
+- telescope search through all bookmarks
+
 - associate marks with git hash
 
+## TODO (Low Priority)
+
 - allow user to specify where DB is saved
-- allow jumping between files
+- allow bookmark jumping between files
 - allow user to select from a list of predefined icons
 - parameter on create for character
