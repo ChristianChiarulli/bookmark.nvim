@@ -9,15 +9,15 @@ local files = require("bookmark.datastore.file_tbl")
 
 M.bookmarks = tbl("bookmarks", {
 	id = true,
-	lnum = { "number", required = true, unique = true },
+	lnum = { "number", required = true, unique = false },
 	sign_id = { "number", unique = false, required = true },
 	sign = { "text", required = true },
 	files = {
-		type = "text",
-		reference = "files.path",
-		on_delete = "cascade", --- when referenced file is deleted, delete self
-		on_update = "cascade", --- when referenced file is deleted, delete self
-		required = true,
+		type = "integer",
+		reference = "files.id",
+		-- on_delete = "cascade", --- when referenced file is deleted, delete self
+		-- on_update = "cascade", --- when referenced file is deleted, delete self
+		-- required = true,
 	},
 })
 
@@ -41,11 +41,15 @@ M.get = function(bufnr, lnum)
 end
 
 M.get_all_file = function()
-	local project_path = vim.fn.getcwd()
-	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	-- local project_path = vim.fn.getcwd()
+	-- local filepath = vim.fn.expand("%:p")
+	-- local relative_file_path = string.gsub(filepath, project_path, "")
+  local file = files.get()
 	local bookmarks = {}
-	M.bookmarks:each({ where = { files = relative_file_path } }, function(row)
+  if file == nil then
+    return bookmarks
+  end
+	M.bookmarks:each({ where = { files = file.id } }, function(row)
 		table.insert(bookmarks, row)
 	end)
 	return bookmarks
@@ -63,25 +67,22 @@ M.create = function()
 		files.create()
 	end
 
-	local project_path = vim.fn.getcwd()
-	local filepath = vim.fn.expand("%:p")
-	local file = string.gsub(filepath, project_path, "")
+	local file = files.get()
+
 	local current_line = util.get_current_line()
 	-- local id = generateSignId(file, current_line)
 	local sign_id = util.add_sign(0, current_line, "BookmarkSign")
 	-- print("sign_id: ", sign_id)
-	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file })
+	print({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file.id })
+	M.bookmarks:insert({ lnum = current_line, sign_id = sign_id, sign = config.options.sign, files = file.id })
 	-- print("bookmark.sign_id: ", sign_id)
 end
 
 -- update bookmark
-M.update = function(sign_text, sign_id, lnum, file_path)
-	-- print("sign_id: ", sign_id)
-	-- print("lnum: ", lnum)
-	-- print("file_path: ", file_path)
+M.update = function(sign_text, sign_id, lnum, file_id)
 	M.bookmarks:update({
-		where = { sign_id = sign_id, files = file_path },
-		set = { lnum = lnum, sign = sign_text, files = file_path },
+		where = { sign_id = sign_id, files = file_id },
+		set = { lnum = lnum, sign = sign_text, files = file_id },
 	})
 end
 
@@ -90,14 +91,10 @@ M.delete = function(bufnr, lnum)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	lnum = lnum or util.get_current_line()
 	local signs = vim.fn.sign_getplaced(bufnr, { group = "Bookmarks", lnum = lnum })
-
-	local project_path = vim.fn.getcwd()
-	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
-
+	local file = files.get()
 	for _, sign in ipairs(signs[1].signs) do
 		if sign.lnum == lnum then
-			M.bookmarks:remove({ where = { sign_id = sign.id, files = relative_file_path } })
+			M.bookmarks:remove({ where = { sign_id = sign.id, files = file.id } })
 			vim.fn.sign_unplace("Bookmarks", {
 				buffer = vim.api.nvim_buf_get_name(0),
 				id = sign.id,
