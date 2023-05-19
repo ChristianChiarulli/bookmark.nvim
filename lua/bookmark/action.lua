@@ -84,7 +84,8 @@ end
 function M.next_file()
 	local file_list = files.get_all_marked()
 
-	if #file_list == 0 then
+  -- TODO: in future jump to file mark in current buffer if exists
+	if #file_list == 0 or #file_list == 1 then
 		print("No filemarks")
 		return
 	end
@@ -138,7 +139,8 @@ end
 function M.previous_file()
 	local file_list = files.get_all_marked()
 
-	if #file_list == 0 then
+  -- TODO: in future jump to file mark in current buffer if exists
+	if #file_list == 0 or #file_list == 1 then
 		print("No filemarks")
 		return
 	end
