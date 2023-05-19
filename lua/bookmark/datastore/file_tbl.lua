@@ -121,20 +121,37 @@ M.get_all = function()
 	return files
 end
 
+M.get_by_path = function(project_path, path)
+	return M.files:where({ projects = project_path, path = path })
+end
+
 M.get_all_marked = function()
 	local project_path = vim.fn.getcwd()
 	local files = {}
 	M.files:each({ where = { projects = project_path } }, function(row)
-    if row.sign_id ~= "" and row.sign_id ~= nil then
-      table.insert(files, row)
-    end
+		if row.sign_id ~= "" and row.sign_id ~= nil then
+			table.insert(files, row)
+		end
 	end)
 	return files
 end
 
 -- update file
-M.update = function()
-	print("stub")
+M.update = function(row_old, row_new)
+	print("row_old", vim.inspect(row_old))
+
+	print("row_new", vim.inspect(row_new))
+
+	M.files:update({
+		where = { id = row_old.id },
+		set = {
+			path = row_new.path,
+			projects = row_new.projects,
+			lnum = row_new.lnum,
+			sign_id = row_new.sign_id,
+			sign = row_new.sign,
+		},
+	})
 end
 
 -- delete file
@@ -145,6 +162,10 @@ M.delete = function()
 		return
 	end
 	M.files:remove({ where = { id = file.id } })
+end
+
+M.delete_by_id = function(id)
+	M.files:remove({ where = { id = id } })
 end
 
 return M
