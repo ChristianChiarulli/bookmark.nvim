@@ -15,9 +15,9 @@ M.bookmarks = tbl("bookmarks", {
 	files = {
 		type = "integer",
 		reference = "files.id",
-		-- on_delete = "cascade", --- when referenced file is deleted, delete self
-		-- on_update = "cascade", --- when referenced file is deleted, delete self
-		-- required = true,
+		on_delete = "cascade", --- when referenced file is deleted, delete self
+		on_update = "cascade", --- when referenced file is deleted, delete self
+		required = true,
 	},
 })
 

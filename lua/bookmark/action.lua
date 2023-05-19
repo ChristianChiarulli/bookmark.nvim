@@ -82,6 +82,11 @@ end
 function M.next_file()
 	local file_list = files.get_all_marked()
 
+	if #file_list == 0 then
+		print("No filemarks")
+		return
+	end
+
 	table.sort(file_list, function(a, b)
 		return a.sign_id < b.sign_id
 	end)
@@ -130,6 +135,11 @@ end
 
 function M.previous_file()
 	local file_list = files.get_all_marked()
+
+	if #file_list == 0 then
+		print("No filemarks")
+		return
+	end
 
 	table.sort(file_list, function(a, b)
 		return a.sign_id < b.sign_id
