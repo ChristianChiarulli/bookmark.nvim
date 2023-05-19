@@ -8,9 +8,6 @@ local save_bookmark = function()
 	local group = "Bookmarks"
 	local signs = vim.fn.sign_getplaced(bufnr, { group = group })
 	local lnums = {}
-	-- local project_path = vim.fn.getcwd()
-	-- local filepath = vim.fn.expand("%:p")
-	-- local relative_file_path = string.gsub(filepath, project_path, "")
 	local file = files.get()
 	-- print("relative_file_path: ", relative_file_path)
 	for _, sign in ipairs(signs[1].signs) do
@@ -61,3 +58,6 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 		restore_filemark()
 	end,
 })
+
+
+-- TODO: Delete bookmarks when file is deleted

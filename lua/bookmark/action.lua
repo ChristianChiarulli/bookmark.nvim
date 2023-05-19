@@ -9,6 +9,8 @@ local projects = db.projects
 local M = {}
 
 function M.toggle()
+  -- TODO: filemark should have it's own group
+  -- check if filemark on line, delete and replace with bookmark
 	local bookmark = bookmarks.get()
 	if bookmark == nil then
 		bookmarks.create()
@@ -234,6 +236,10 @@ function M.change_icon()
 end
 
 function M.toggle_filemark()
+	local bookmark = bookmarks.get()
+	if bookmark ~= nil then
+		bookmarks.delete()
+	end
 	local file = files.get()
 	if file == nil then
 		files.mark_file()

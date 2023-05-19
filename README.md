@@ -33,10 +33,23 @@ FilemarkPrev
 FilemarkList
 ```
 
+## Telescope
+
+You will need to load the extension first:
+
+```
+require("telescope").load_extension('bookmark')
+```
+
+Then call it with:
+
+```
+:Telescope bookmark filemarks
+```
+
 ## TODO
 
 - telescope search through buffer bookmarks
-- telescope search for all filemarks
 
 - fix bookmark and filemark on same line
 
@@ -46,6 +59,9 @@ FilemarkList
 - telescope search through all bookmarks
 
 - associate marks with git hash
+
+- option for harpoon like behavior for filemarks
+- dynamic project directory (at least remove OS specific path use ~ instead of /Users/chris or /home/chris)
 
 ## TODO (Low Priority)
 
