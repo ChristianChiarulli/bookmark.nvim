@@ -79,11 +79,56 @@ function M.previous()
 	end
 end
 
-function M.next_prj()
+function M.next_file()
+	local file_list = files.get_all_marked()
 
+	table.sort(file_list, function(a, b)
+		return a.sign_id < b.sign_id
+	end)
+
+	local project_path = vim.fn.getcwd()
+	local filepath = vim.fn.expand("%:p")
+	local relative_file_path = string.gsub(filepath, project_path, "")
+
+	local current_sign_id = nil
+	local other_sign_ids = {}
+
+	for i = #file_list, 1, -1 do
+		local item = file_list[i]
+		if item.path == relative_file_path then
+			current_sign_id = item.sign_id
+			table.remove(file_list, i)
+		else
+			table.insert(other_sign_ids, item.sign_id)
+		end
+	end
+
+	local next_file_sign_id = nil
+
+	if current_sign_id == nil then
+		next_file_sign_id = file_list[1].sign_id
+	else
+		next_file_sign_id = util.next_largest(current_sign_id, other_sign_ids)
+	end
+
+	if next_file_sign_id == nil then
+		next_file_sign_id = file_list[1].sign_id
+	end
+
+	local next_file = nil
+	for i = #file_list, 1, -1 do
+		local item = file_list[i]
+		if item.sign_id == next_file_sign_id then
+			next_file = item
+		end
+	end
+
+	vim.api.nvim_command("edit " .. next_file.projects .. next_file.path)
+	vim.api.nvim_command("normal! " .. next_file.lnum .. "G")
+	vim.api.nvim_command("normal! zz")
 end
 
-function M.previous_prj()
+function M.previous_file()
 	print("stub")
 end
 
@@ -102,11 +147,12 @@ function M.list_buffer_qf()
 
 	for _, item in ipairs(bookmark_list) do
 		-- Open the file in a buffer and get the line text
-		local bufnr = vim.fn.bufadd(path .. item.files)
+    local file = files.get_by_id(item.files)
+		local bufnr = vim.fn.bufadd(path .. file.path)
 		vim.fn.bufload(bufnr)
 		local line_text = vim.api.nvim_buf_get_lines(bufnr, item.lnum - 1, item.lnum, false)[1]
 
-		table.insert(qf_list, { filename = path .. item.files, lnum = item.lnum, text = item.sign .. " " .. line_text })
+		table.insert(qf_list, { filename = path .. file.path, lnum = item.lnum, text = item.sign .. " " .. line_text })
 	end
 	vim.api.nvim_command("copen")
 

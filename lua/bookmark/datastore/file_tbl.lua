@@ -13,7 +13,6 @@ M.files = tbl("files", {
 	sign = { "text", required = false },
 	path = {
 		"text",
-		unique = true,
 		required = true,
 	},
 
@@ -26,18 +25,18 @@ M.files = tbl("files", {
 	},
 })
 
--- get file id
+-- get by current path
 M.get = function()
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
-	-- print("project_path: ", project_path)
 	local relative_file_path = string.gsub(filepath, project_path, "")
 	local file = M.files:where({ path = relative_file_path })
-	-- print("file_path: ", vim.inspect(file_path))
-	if file == nil then
-		-- print("file path is nil")
-		return nil
-	end
+	return file
+end
+
+-- get by id
+M.get_by_id = function(id)
+	local file = M.files:where({ id = id })
 	return file
 end
 
@@ -118,6 +117,17 @@ M.get_all = function()
 	local files = {}
 	M.files:each({ where = { projects = project_path } }, function(row)
 		table.insert(files, row)
+	end)
+	return files
+end
+
+M.get_all_marked = function()
+	local project_path = vim.fn.getcwd()
+	local files = {}
+	M.files:each({ where = { projects = project_path } }, function(row)
+    if row.sign_id ~= "" and row.sign_id ~= nil then
+      table.insert(files, row)
+    end
 	end)
 	return files
 end
