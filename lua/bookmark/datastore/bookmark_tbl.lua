@@ -46,7 +46,7 @@ M.get_all_file = function()
 	-- local relative_file_path = string.gsub(filepath, project_path, "")
   local file = files.get()
 
-  print("file: ", vim.inspect(file))
+  -- print("file: ", vim.inspect(file))
 
   -- print("file.projects: ", file.projects)
 
