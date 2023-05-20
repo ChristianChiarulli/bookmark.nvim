@@ -30,7 +30,7 @@ M.get = function()
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
 	local relative_file_path = string.gsub(filepath, project_path, "")
-	local file = M.files:where({ path = relative_file_path })
+	local file = M.files:where({ path = relative_file_path, projects = project_path })
 	return file
 end
 
