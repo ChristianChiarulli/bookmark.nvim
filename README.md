@@ -1,6 +1,8 @@
 # 📚 bookmark.nvim
 Bookmark and jump between lines in the current file
 
+![getoverhere](https://user-images.githubusercontent.com/29136904/239709111-a29a2340-0272-4858-83f4-84aad250d9d1.png)
+
 🚧This plugin is in alpha expect bugs please report issues 🚧
 
 ## Install
