@@ -20,7 +20,13 @@ end)
 api.events.subscribe(Event.FileRemoved, function(data)
 	local project_path = vim.fn.getcwd()
 	local old_relative_file_path = string.gsub(data.fname, project_path, "")
+  if old_relative_file_path == "" then
+    return
+  end
 	local file = files.get_by_path(project_path, old_relative_file_path)
+  if file == nil then
+    return
+  end
 	files.delete_by_id(file.id)
 end)
 
