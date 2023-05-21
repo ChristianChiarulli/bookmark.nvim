@@ -10,9 +10,22 @@ local files = require("bookmark.datastore.file_tbl")
 local get_file_list = function()
 	local marked_files = files.get_all_marked()
 	local file_list = {}
+	local current_file = {}
+	local project_path = vim.fn.getcwd()
+	local filepath = vim.fn.expand("%:p")
+	local relative_file_path = string.gsub(filepath, project_path, "")
 	for _, file in ipairs(marked_files) do
-		table.insert(file_list, { file.path, file.lnum, file.sign_id, file.projects })
+		if file.path == relative_file_path and file.projects == project_path then
+			current_file = { file.path, file.lnum, file.sign_id, file.projects }
+		else
+			table.insert(file_list, { file.path, file.lnum, file.sign_id, file.projects })
+		end
 	end
+  if current_file[1] ~= nil then
+    table.insert(file_list, current_file)
+  end
+
+  
 	return file_list
 end
 
