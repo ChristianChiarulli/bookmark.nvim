@@ -138,10 +138,6 @@ end
 
 -- update file
 M.update = function(row_old, row_new)
-	print("row_old", vim.inspect(row_old))
-
-	print("row_new", vim.inspect(row_new))
-
 	M.files:update({
 		where = { id = row_old.id },
 		set = {
