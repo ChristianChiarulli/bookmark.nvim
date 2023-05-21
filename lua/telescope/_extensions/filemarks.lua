@@ -8,6 +8,7 @@ local webdevicon = require("nvim-web-devicons")
 
 local files = require("bookmark.datastore.file_tbl")
 
+-- TODO: better sorting, last file visited should be first
 local get_file_list = function()
 	local marked_files = files.get_all_marked()
 	local file_list = {}
@@ -46,6 +47,14 @@ local get_file_icon = function(filename)
 	return icon
 end
 
+-- TODO: add normal mode mappings
+-- dd delete 
+-- c-d delete 
+-- v split
+-- c-v split
+-- t tab
+
+
 -- { {
 --     id = 4,
 --     lnum = 8,
@@ -67,7 +76,8 @@ return function(opts)
 				entry_maker = function(entry)
 					return {
 						value = entry,
-						display = get_file_icon(entry[1]) .. " " .. entry[1]:sub(2) .. ":" .. entry[2],
+						-- display = get_file_icon(entry[1]) .. " " .. entry[1]:sub(2) .. ":" .. entry[2],
+						display = get_file_icon(entry[1]) .. " " .. entry[1]:sub(2),
 						ordinal = tostring(entry[1]),
 						path = entry[4] .. entry[1],
 						lnum = entry[2],
