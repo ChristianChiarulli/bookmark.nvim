@@ -29,7 +29,7 @@ M.files = tbl("files", {
 M.get = function()
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 	local file = M.files:where({ path = relative_file_path, projects = project_path })
 	return file
 end
@@ -55,7 +55,7 @@ M.create = function()
 	local project_path = vim.fn.getcwd()
 
 	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 	M.files:insert({ path = relative_file_path, projects = project_path })
 end
 
@@ -69,7 +69,7 @@ M.mark_file = function()
 		M.create()
 	end
 
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 
 	local current_line = util.get_current_line()
 	local sign_id = util.add_sign(0, current_line, "FilemarkSign")
@@ -93,7 +93,7 @@ M.unmark_file = function()
 	if file == nil then
 		return
 	end
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 	M.files:update({
 		where = { path = relative_file_path },
 		set = {

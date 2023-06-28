@@ -34,4 +34,11 @@ function M.next_smallest(num, list)
 	return next_smallest_num
 end
 
+function M.trim_prefix(s, prefix)
+	if string.sub(s, 1, #prefix) == prefix then
+		return string.sub(s, #prefix + 1)
+	end
+	return s
+end
+
 return M

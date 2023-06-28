@@ -9,8 +9,8 @@ local projects = db.projects
 local M = {}
 
 function M.toggle()
-  -- TODO: filemark should have it's own group
-  -- check if filemark on line, delete and replace with bookmark
+	-- TODO: filemark should have it's own group
+	-- check if filemark on line, delete and replace with bookmark
 	local bookmark = bookmarks.get()
 	if bookmark == nil then
 		bookmarks.create()
@@ -84,7 +84,7 @@ end
 function M.next_file()
 	local file_list = files.get_all_marked()
 
-  -- TODO: in future jump to file mark in current buffer if exists
+	-- TODO: in future jump to file mark in current buffer if exists
 	if #file_list == 0 or #file_list == 1 then
 		print("No filemarks")
 		return
@@ -96,7 +96,7 @@ function M.next_file()
 
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 
 	local current_sign_id = nil
 	local other_sign_ids = {}
@@ -139,7 +139,7 @@ end
 function M.previous_file()
 	local file_list = files.get_all_marked()
 
-  -- TODO: in future jump to file mark in current buffer if exists
+	-- TODO: in future jump to file mark in current buffer if exists
 	if #file_list == 0 or #file_list == 1 then
 		print("No filemarks")
 		return
@@ -151,7 +151,7 @@ function M.previous_file()
 
 	local project_path = vim.fn.getcwd()
 	local filepath = vim.fn.expand("%:p")
-	local relative_file_path = string.gsub(filepath, project_path, "")
+	local relative_file_path = util.trim_prefix(filepath, project_path)
 
 	local current_sign_id = nil
 	local other_sign_ids = {}
